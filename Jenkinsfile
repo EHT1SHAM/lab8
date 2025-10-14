@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
     
     stages {
         stage('Checkout') {
@@ -8,22 +12,16 @@ pipeline {
             }
         }
         
-        stage('Install Python') {
-            steps {
-                sh 'sudo apt-get update && sudo apt-get install -y python3 python3-pip'
-            }
-        }
-        
         stage('Setup Python') {
             steps {
-                sh 'python3 --version'
-                sh 'pip3 install --upgrade pip'
+                sh 'python --version'
+                sh 'pip install --upgrade pip'
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                sh 'pip3 install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
         
