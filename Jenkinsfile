@@ -8,16 +8,22 @@ pipeline {
             }
         }
         
+        stage('Install Python') {
+            steps {
+                sh 'apt-get update && apt-get install -y python3 python3-pip'
+            }
+        }
+        
         stage('Setup Python') {
             steps {
-                sh 'python --version'
-                sh 'pip install --upgrade pip'
+                sh 'python3 --version'
+                sh 'pip3 install --upgrade pip'
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'pip3 install -r requirements.txt'
             }
         }
         
