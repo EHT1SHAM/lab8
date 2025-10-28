@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Library Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f8f9fa; }
         .container { margin-top: 40px; }
@@ -19,52 +19,120 @@
         <div class="col">
             <h1 class="text-center">Library Management</h1>
         </div>
+        <div class="col-auto">
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+        </div>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <div class="row mb-4">
         <div class="col-md-6 offset-md-3">
             <div class="card p-3">
-                <form method="POST" action="/add">
+                <h5 class="card-title text-center mb-3">Add New Book</h5>
+                <form method="POST" action="{{ url_for('add_book') }}">
+                    {{ form.hidden_tag() }}
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="title" placeholder="Book Title" required>
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control") }}
+                        {% if form.title.errors %}
+                            {% for error in form.title.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="author" placeholder="Author" required>
+                        {{ form.author.label(class="form-label") }}
+                        {{ form.author(class="form-control") }}
+                        {% if form.author.errors %}
+                            {% for error in form.author.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="mb-3">
-                        <input type="number" class="form-control" name="year" placeholder="Year" required>
+                        {{ form.genre.label(class="form-label") }}
+                        {{ form.genre(class="form-control") }}
+                        {% if form.genre.errors %}
+                            {% for error in form.genre.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
-                    <button type="submit" class="btn btn-custom w-100">Add Book</button>
+                    <div class="mb-3">
+                        {{ form.year.label(class="form-label") }}
+                        {{ form.year(class="form-control") }}
+                        {% if form.year.errors %}
+                            {% for error in form.year.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="2") }}
+                        {% if form.description.errors %}
+                            {% for error in form.description.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {{ form.submit(class="btn btn-custom w-100") }}
                 </form>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Year</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for book in books %}
-                    <tr>
-                        <td>{{ book.title }}</td>
-                        <td>{{ book.author }}</td>
-                        <td>{{ book.year }}</td>
-                        <td>
-                            <a href="/edit/{{ book.id }}" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="/delete/{{ book.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this book?');">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-md-10 offset-md-1">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Book Collection</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Genre</th>
+                                <th>Year</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for book in books %}
+                            <tr>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.genre }}</td>
+                                <td>{{ book.year }}</td>
+                                <td>{{ book.description|truncate(50) if book.description else 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}" style="display: inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this book?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

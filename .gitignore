@@ -22,3 +22,4 @@ coverage.xml
 node_modules/
 *.db
 instance/
+jenkins_data/
