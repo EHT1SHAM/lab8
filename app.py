@@ -39,7 +39,9 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     author = db.Column(db.String(100), nullable=False)
+    genre = db.Column(db.String(50), nullable=True)
     year = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.Text, nullable=True)
 
 # WTForms for input validation and CSRF protection
 class BookForm(FlaskForm):
@@ -53,9 +55,17 @@ class BookForm(FlaskForm):
         Length(min=1, max=100),
         Regexp(r'^[^<>&]*$', message="HTML characters not allowed")  # Prevent XSS
     ])
+    genre = StringField('Genre', validators=[
+        Length(max=50),
+        Regexp(r'^[^<>&]*$', message="HTML characters not allowed")  # Prevent XSS
+    ])
     year = IntegerField('Year', validators=[
         DataRequired(),
         NumberRange(min=1000, max=2100, message="Please enter a valid year")
+    ])
+    description = StringField('Description', validators=[
+        Length(max=500),
+        Regexp(r'^[^<>&]*$', message="HTML characters not allowed")  # Prevent XSS
     ])
     submit = SubmitField('Submit')
 
@@ -105,7 +115,8 @@ def login_required(f):
 @login_required
 def index():
     books = Book.query.all()
-    return render_template('index.html', books=books)
+    form = BookForm()
+    return render_template('index.html', books=books, form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -157,7 +168,9 @@ def add_book():
         new_book = Book(
             title=form.title.data,
             author=form.author.data,
-            year=form.year.data
+            genre=form.genre.data,
+            year=form.year.data,
+            description=form.description.data
         )
         db.session.add(new_book)
         db.session.commit()
@@ -174,7 +187,9 @@ def edit_book(id):
         # Using parameterized queries (SQLAlchemy handles this automatically)
         book.title = form.title.data
         book.author = form.author.data
+        book.genre = form.genre.data
         book.year = form.year.data
+        book.description = form.description.data
         db.session.commit()
         flash('Book updated successfully!', 'success')
         return redirect(url_for('index'))
