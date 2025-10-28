@@ -141,8 +141,10 @@ class RegisterForm(FlaskForm):
 #### Flask Application Security Settings
 ```python
 app.config['SECRET_KEY'] = secrets.token_hex(32)  # Cryptographically secure secret key
-app.config['SESSION_COOKIE_SECURE'] = True        # HTTPS-only cookies
-app.config['SESSION_COOKIE_HTTPONLY'] = True      # Prevent JavaScript cookie access
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS-only cookies
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # Prevent JavaScript cookie access
 app.config['SESSION_PERMANENT'] = True
 ```
 
@@ -155,7 +157,7 @@ csrf = CSRFProtect(app)  # Global CSRF protection
 
 ## Security Features Implemented
 
-### 1. Secure Input Handling & Validation ✅
+### 1. Secure Input Handling & Validation
 
 **Implementation:**
 - **WTForms Integration:** All user inputs validated using WTForms
@@ -168,7 +170,7 @@ csrf = CSRFProtect(app)  # Global CSRF protection
 - Ensures data integrity and format compliance
 - Provides immediate feedback for invalid inputs
 
-### 2. Parameterized Queries (SQL Injection Prevention) ✅
+### 2. Parameterized Queries (SQL Injection Prevention)
 
 **Implementation:**
 - **SQLAlchemy ORM:** All database operations use parameterized queries
@@ -193,7 +195,7 @@ db.session.add(new_book)
 - Automatic parameter binding and escaping
 - Type-safe database operations
 
-### 3. CSRF Protection ✅
+### 3. CSRF Protection
 
 **Implementation:**
 - **Flask-WTF CSRF Tokens:** Automatic token generation and validation
@@ -213,7 +215,7 @@ db.session.add(new_book)
 - Protects against cross-site request forgery attacks
 - Automatic token validation on form submission
 
-### 4. Secure Error Handling ✅
+### 4. Secure Error Handling
 
 **Implementation:**
 - **Custom Error Pages:** Dedicated templates for HTTP errors
@@ -240,7 +242,7 @@ def forbidden(e):
 - Provides user-friendly error pages
 - Maintains application stability during errors
 
-### 5. Secure Password Storage ✅
+### 5. Secure Password Storage
 
 **Implementation:**
 - **Flask-Bcrypt Hashing:** Industry-standard password hashing
@@ -364,28 +366,28 @@ pipeline {
 ### Security Testing Results
 
 #### 1. Authentication Testing
-- ✅ User registration with validation
-- ✅ Password hashing verification
-- ✅ Login/logout functionality
-- ✅ Session management
+- User registration with validation
+- Password hashing verification
+- Login/logout functionality
+- Session management
 
 #### 2. Input Validation Testing
-- ✅ XSS prevention through regex validation
-- ✅ SQL injection prevention via parameterized queries
-- ✅ CSRF token validation
-- ✅ Form field validation
+- XSS prevention through regex validation
+- SQL injection prevention via parameterized queries
+- CSRF token validation
+- Form field validation
 
 #### 3. Error Handling Testing
-- ✅ 404 error page rendering
-- ✅ 500 error page rendering
-- ✅ 403 error page rendering
-- ✅ No sensitive information leakage
+- 404 error page rendering
+- 500 error page rendering
+- 403 error page rendering
+- No sensitive information leakage
 
 #### 4. CI/CD Pipeline Testing
-- ✅ Automated dependency installation
-- ✅ Security import validation
-- ✅ Build process completion
-- ✅ Deployment simulation
+- Automated dependency installation
+- Security import validation
+- Build process completion
+- Deployment simulation
 
 ### Performance Metrics
 - **Application Startup:** < 2 seconds
@@ -451,11 +453,11 @@ email-validator==2.1.0
 ### Security Implementation Summary
 All 5 required security practices have been successfully implemented:
 
-1. ✅ **Secure Input Handling & Validation** - WTForms with regex validation
-2. ✅ **Parameterized Queries** - SQLAlchemy ORM automatic protection
-3. ✅ **CSRF Protection** - Flask-WTF global token validation
-4. ✅ **Secure Error Handling** - Custom error pages with no information leakage
-5. ✅ **Secure Password Storage** - Flask-Bcrypt with salt integration
+1. **Secure Input Handling & Validation** - WTForms with regex validation
+2. **Parameterized Queries** - SQLAlchemy ORM automatic protection
+3. **CSRF Protection** - Flask-WTF global token validation
+4. **Secure Error Handling** - Custom error pages with no information leakage
+5. **Secure Password Storage** - Flask-Bcrypt with salt integration
 
 ### Project Achievements
 - **Production-Ready Application:** Complete security hardening
@@ -481,7 +483,7 @@ All 5 required security practices have been successfully implemented:
 ---
 
 **Report Generated:** October 28, 2025  
-**Project Status:** ✅ Complete  
-**Security Compliance:** ✅ All Requirements Met  
-**CI/CD Status:** ✅ Pipeline Active</content>
+**Project Status:** Complete  
+**Security Compliance:** All Requirements Met  
+**CI/CD Status:** Pipeline Active</content>
 <parameter name="filePath">e:\SEM 7\SSD LAB\i221777_lab06_files\Lab_Task_8_Security_Report.md
